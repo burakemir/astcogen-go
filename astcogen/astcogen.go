@@ -2,6 +2,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -20,8 +21,18 @@ import (
 //   output = "<path to output file>"
 // Paths are interpreted as relative to the config file.
 type Config struct {
-	Input  string
-	Output string
+	Input  map[string]string
+	Output map[string]string
+}
+
+func (c Config) Check() error {
+	if _, ok := c.Input["path"]; !ok {
+		return errors.New("missing path in [input]")
+	}
+	if _, ok := c.Output["path"]; !ok {
+		return errors.New("missing path in [output]")
+	}
+	return nil
 }
 
 type Visitor struct {
@@ -64,11 +75,14 @@ func main() {
 	var cfg Config
 	err = toml.Unmarshal(configFile, &cfg)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+	if err = cfg.Check(); err != nil {
+		log.Fatal(err)
 	}
 
 	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, path.Join(configDir, cfg.Input), nil, parser.AllErrors)
+	file, err := parser.ParseFile(fset, path.Join(configDir, cfg.Input["path"]), nil, parser.AllErrors)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,7 +90,7 @@ func main() {
 	visitor := &Visitor{fset: fset}
 	ast.Walk(visitor, file)
 
-	outputFile, err := os.Create(path.Join(configDir, cfg.Output))
+	outputFile, err := os.Create(path.Join(configDir, cfg.Output["path"]))
 	if err != nil {
 		log.Fatal(err)
 	}

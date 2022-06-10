@@ -1,2 +1,5 @@
-input = "hello.go"
-output = "hello.target.go"
+[input]
+path = "hello.go"
+
+[output]
+path = "hello.target.go"
