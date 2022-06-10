@@ -1,0 +1,2 @@
+input = "hello.go"
+output = "hello.target.go"
