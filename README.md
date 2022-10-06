@@ -4,9 +4,7 @@ https://eli.thegreenplace.net/2021/rewriting-go-source-code-with-ast-tooling/
 
 This should render as math $\sqrt{3}$
 
-```math
-\sqrt{3}
-
+$$
 \begin{prooftree}
 \AxiomC{}
 \RightLabel{Hyp$^{1}$}
@@ -24,6 +22,6 @@ This should render as math $\sqrt{3}$
 \BIC{$Q\wedge R$}
 \RL{$\to_I$$^1$}
 \UIC{$P\to Q\wedge R$}
-\end{prooftree}
+$$
 ```
 
